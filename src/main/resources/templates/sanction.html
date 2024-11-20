@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanctions</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/fragments.css">
+</head>
+<body>
+	<div th:include="fragments/sidebar :: sidebar"></div>
+
+	<div class="main">
+		<div th:include="fragments/header :: header"></div>
+
+		<div class="content">
+			<h1>Add Sanction</h1>
+			<form id="sanctionForm">
+				<input type="text" id="description" placeholder="Description" required />
+				<button type="button" onclick="addSanction()">Submit</button>
+			</form>
+
+			<h2>Sanctions List</h2>
+			<table id="sanctionTable">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Sanctions will be dynamically added here -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script src="/js/sanction.js"></script>
+	<script src="/js/fragments.js"></script>
+</body>
+</html>

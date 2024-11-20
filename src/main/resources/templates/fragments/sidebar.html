@@ -1,0 +1,32 @@
+<!-- fragments/sidebar.html -->
+<div th:fragment="sidebar">
+	<div class="sidebar">
+		<h2>POS System</h2>
+
+		<!-- Store Section with Submenu -->
+		<div class="menu-section">
+			<a href="/store">Stores</a>
+			<ul class="submenu">
+				<li><a href="/store">Stores</a></li>
+				<li><a href="/department">Departments</a></li>
+				<li><a href="/position">Positions</a></li>
+				<li><a href="/branch">Branches</a></li>
+				<li><a href="/employee">Employees</a></li>
+				<li><a href="/customer">Customers</a></li>
+			</ul>
+		</div>
+
+		<!-- Product Section with Submenu -->
+		<div class="menu-section">
+			<a href="/product">Products</a>
+			<ul class="submenu">
+				<li><a href="/product">Products</a></li>
+				<li><a href="/category">Category</a></li>
+				<li><a href="/storage">Storages</a></li>
+			</ul>
+		</div>
+
+		<!-- Additional Links -->
+		<a href="/bill">Bills</a> <a href="/sanction">Sanctions</a>
+	</div>
+</div>

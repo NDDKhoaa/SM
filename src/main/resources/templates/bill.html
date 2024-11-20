@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Bill</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/fragments.css">
+</head>
+<body>
+	<div th:include="fragments/sidebar :: sidebar"></div>
+
+	<div class="main">
+		<div th:include="fragments/header :: header"></div>
+
+		<div class="content">
+			<h1>Create Bill</h1>
+			<form action="/bills/create" method="post" id="billForm">
+				<select id="customerId" name="customerId" required>
+					<option value="" disabled selected>Select Customer</option>
+					<!-- Customer options dynamically loaded here -->
+				</select> <select id="branchId" name="branchId" required>
+					<option value="" disabled selected>Select Branch</option>
+					<!-- Branch options dynamically loaded here -->
+				</select> <select id="employeeId" name="employeeId" required>
+					<option value="" disabled selected>Select Employee</option>
+					<!-- Employee options dynamically loaded here -->
+				</select>
+
+				<h3>Products</h3>
+				<div id="productList">
+					<!-- Dynamically added product rows will go here -->
+				</div>
+
+				<button type="button" onclick="addProductRow()">Add Product</button>
+				<br>
+
+				<button type="submit">Submit</button>
+			</form>
+
+			<h2>Bills List</h2>
+			<table id="billTable">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Customer</th>
+						<th>Branch</th>
+						<th>Employee</th>
+						<th>Total</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Bills will be dynamically added here -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script src="/js/bill.js"></script>
+	<script src="/js/fragments.js"></script>
+</body>
+</html>
