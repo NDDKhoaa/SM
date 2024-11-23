@@ -159,6 +159,28 @@ public class Employee {
 		this.customers = customers;
 	}
 
+	public Employee(String employeeFirstName, String employeeLastName, String gender, LocalDate dob, String idNumber,
+			String address, String nationality, String taxNumber, Position position, Branch branch, Store store,
+			String accountID, String telephone, String email, double salary, String status) {
+		this.employeeFirstName = employeeFirstName;
+		this.employeeLastName = employeeLastName;
+		this.gender = gender;
+		this.dob = dob;
+		this.idNumber = idNumber;
+		this.address = address;
+		this.nationality = nationality;
+		this.taxNumber = taxNumber;
+		this.position = position;
+		this.branch = branch;
+		this.store = store;
+		this.accountID = accountID;
+		this.telephone = telephone;
+		this.email = email;
+		this.salary = salary;
+		this.status = status;
+		this.createdDate = LocalDate.now(); // Sets the current date as createdDate
+	}
+
 	// Getters and Setters
 
 	public long getEmployeeID() {

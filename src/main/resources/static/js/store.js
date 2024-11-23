@@ -59,6 +59,7 @@ function editStore(storeID) {
 function saveStore() {
     const storeID = document.getElementById('storeID').value; // Get storeID from the hidden input
     const store = {
+		storeID: document.getElementById('storeID').value,
         storeName: document.getElementById('storeName').value,
         taxNumber: document.getElementById('taxNumber').value,
         telephone: document.getElementById('telephone').value,

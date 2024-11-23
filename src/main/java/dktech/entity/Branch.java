@@ -3,6 +3,7 @@ package dktech.entity;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,11 +41,16 @@ public class Branch {
 	@Column(name = "status",nullable = false)
 	private String status;
 
-	@ManyToOne
-	@JoinColumn(name = "store_id", nullable = false)
-	@JsonIgnore
-	private Store store;
+    @ManyToOne
+    @JoinColumn(name = "store_id", nullable = false)
+    @JsonIgnore // Keep the full store object ignored
+    private Store store;
 
+    // Add a getter for storeID to expose only the storeID
+    @JsonProperty("storeID")
+    public Long getStoreID() {
+        return store != null ? store.getStoreID() : null; // Safely return store ID or null
+    }
 	public Branch() {
 		super();
 	}

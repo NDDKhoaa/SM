@@ -44,8 +44,7 @@ public class ViewController {
         return "category"; // Maps to category.html
     }
 
-
-    // New mappings for Department, Storage, and Sanction
+    // Mappings for Department, Storage, and Sanction
     @GetMapping("/department")
     public String departmentPage(Model model) {
         model.addAttribute("page", "department");
@@ -63,16 +62,35 @@ public class ViewController {
         model.addAttribute("page", "sanction");
         return "sanction"; // Maps to sanction.html
     }
-    
+
     @GetMapping("/position")
     public String positionPage(Model model) {
         model.addAttribute("page", "position");
-        return "position"; // Maps to sanction.html
+        return "position"; // Maps to position.html
     }
-    
+
     @GetMapping("/billinfo")
     public String billinfoPage(Model model) {
         model.addAttribute("page", "billinfo");
-        return "billinfo"; // Maps to sanction.html
+        return "billinfo"; // Maps to billinfo.html
+    }
+
+    // New mappings for Account, Authorize, and AuthorizeGroup
+    @GetMapping("/account")
+    public String accountPage(Model model) {
+        model.addAttribute("page", "account");
+        return "account"; // Maps to account.html
+    }
+
+    @GetMapping("/authorize")
+    public String authorizePage(Model model) {
+        model.addAttribute("page", "authorize");
+        return "authorize"; // Maps to authorize.html
+    }
+
+    @GetMapping("/authorizegroup")
+    public String authorizeGroupPage(Model model) {
+        model.addAttribute("page", "authorizegroup");
+        return "authorizegroup"; // Maps to authorize-group.html
     }
 }

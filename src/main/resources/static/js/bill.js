@@ -1,124 +1,172 @@
-function loadBills() {
-	fetch('http://localhost:8080/api/bills')
-		.then(response => response.json())
-		.then(data => {
-			const billTable = document.getElementById('billTable').getElementsByTagName('tbody')[0];
-			billTable.innerHTML = ''; // Clear existing rows
-			data.forEach(bill => {
-				const row = billTable.insertRow();
-				row.innerHTML = `
-                        <td>${bill.billID}</td>
-                        <td>${bill.customer.firstName} ${bill.customer.lastName}</td>
-                        <td>${bill.branch.branchName}</td>
-                        <td>${bill.employee.employeeFirstName} ${bill.employee.employeeLastName}</td>
-                        <td>${bill.total}</td>
-                        <td>${bill.status}</td>
-                    `;
-			});
-		})
-		.catch(error => console.error('Error fetching bills:', error));
+let selectedProducts = [];
+let selectedCustomerId = null;
+let selectedBranchId = null;
+
+// Load customers and populate dropdown
+function loadCustomers() {
+    fetch('/api/customers')
+        .then(response => response.json())
+        .then(customers => {
+            const customerSelect = document.getElementById('customerSelect');
+            customers.forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer.customerID;
+                option.textContent = `${customer.firstName} ${customer.lastName}`;
+                customerSelect.appendChild(option);
+            });
+
+            customerSelect.addEventListener('change', () => {
+                selectedCustomerId = customerSelect.value;
+            });
+        })
+        .catch(error => console.error('Error loading customers:', error));
 }
 
-// Add a product row with input fields for quantity, and promotion
-function addProductRow() {
-	const productList = document.getElementById('productList');
-	const productRow = document.createElement('div');
-	productRow.classList.add('product-row');
+// Load branches and populate dropdown
+function loadBranches() {
+    fetch('/api/branches')
+        .then(response => response.json())
+        .then(branches => {
+            const branchSelect = document.getElementById('branchSelect');
+            branches.forEach(branch => {
+                const option = document.createElement('option');
+                option.value = branch.branchID;
+                option.textContent = branch.branchName;
+                branchSelect.appendChild(option);
+            });
 
-	const productSelect = document.createElement('select');
-	productSelect.name = "billInfos[][productId]";  // BillInfo product ID
-	productSelect.required = true;
-	productSelect.innerHTML = `<option value="" disabled selected>Select Product</option>`;
-	// Populate product options dynamically
-	// Example: fetch products and populate options here
-	productSelect.addEventListener('change', updatePrice);
-
-	const quantityInput = document.createElement('input');
-	quantityInput.type = 'number';
-	quantityInput.name = "billInfos[][quantity]";  // BillInfo quantity
-	quantityInput.placeholder = 'Quantity';
-	quantityInput.required = true;
-
-	const promotionInput = document.createElement('input');
-	promotionInput.type = 'text';
-	promotionInput.name = "billInfos[][promotion]";  // BillInfo promotion
-
-	const priceInput = document.createElement('input');
-	priceInput.type = 'text';
-	priceInput.name = "billInfos[][price]";  // BillInfo price
-	priceInput.placeholder = 'Price';
-	priceInput.readOnly = true; // Make it readonly, will be auto-filled based on the product
-	priceInput.classList.add('price');  // For styling, optional
-
-	// Add remove button for the row
-	const removeButton = document.createElement('button');
-	removeButton.type = 'button';
-	removeButton.textContent = 'Remove';
-	removeButton.onclick = () => productRow.remove();
-
-	productRow.appendChild(productSelect);
-	productRow.appendChild(quantityInput);
-	productRow.appendChild(promotionInput);
-	productRow.appendChild(priceInput);
-	productRow.appendChild(removeButton);
-	productList.appendChild(productRow);
-
-	// Fetch product options and populate the select
-	fetch('/api/products')  // Example API call to get products
-		.then(response => response.json())
-		.then(products => {
-			products.forEach(product => {
-				const option = document.createElement('option');
-				option.value = product.id;
-				option.textContent = product.name;
-				productSelect.appendChild(option);
-			});
-		});
+            branchSelect.addEventListener('change', () => {
+                selectedBranchId = branchSelect.value;
+            });
+        })
+        .catch(error => console.error('Error loading branches:', error));
 }
 
-// Update price based on selected product
-function updatePrice(event) {
-	const productId = event.target.value;
-	const priceInput = event.target.closest('.product-row').querySelector('.price');
+// Load products from API
+function loadProducts() {
+    fetch('/api/products')
+        .then(response => response.json())
+        .then(products => {
+            const productGrid = document.getElementById('productGrid');
+            productGrid.innerHTML = ''; // Clear grid
 
-	// Fetch product details based on the selected product ID
-	fetch(`/api/products/${productId}`)
-		.then(response => response.json())
-		.then(product => {
-			priceInput.value = product.price;  // Set the price in the readonly input
-		});
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.innerHTML = `
+                    <h3>${product.product}</h3>
+                    <p>Price: $${product.price.toFixed(2)}</p>
+                    <button onclick="addToBill(${product.productID}, '${product.product}', ${product.price})">Add</button>
+                `;
+                productGrid.appendChild(productCard);
+            });
+        })
+        .catch(error => console.error('Error loading products:', error));
 }
 
-// Fetch customer, branch, employee, and product data dynamically (example)
-document.addEventListener("DOMContentLoaded", function() {
-	// Populate select options for customers, branches, and employees
-	const customerSelect = document.getElementById('customerId');
-	customers.forEach(customer => {
-		const option = document.createElement('option');
-		option.value = customer;
-		option.textContent = customer;
-		customerSelect.appendChild(option);
-	});
+// Add product to bill
+function addToBill(productId, productName, price) {
+    const existingProduct = selectedProducts.find(item => item.productId === productId);
 
-	const branchSelect = document.getElementById('branchId');
-	branches.forEach(branch => {
-		const option = document.createElement('option');
-		option.value = branch;
-		option.textContent = branch;
-		branchSelect.appendChild(option);
-	});
+    if (existingProduct) {
+        existingProduct.quantity += 1;
+        existingProduct.totalPrice += price;
+    } else {
+        selectedProducts.push({
+            productId,
+            productName,
+            quantity: 1,
+            totalPrice: price,
+        });
+    }
 
-	const employeeSelect = document.getElementById('employeeId');
-	employees.forEach(employee => {
-		const option = document.createElement('option');
-		option.value = employee;
-		option.textContent = employee;
-		employeeSelect.appendChild(option);
-	});
+    updateBillDisplay();
+}
+
+// Update bill display
+function updateBillDisplay() {
+    const billItems = document.getElementById('billItems');
+    const subtotalElement = document.getElementById('subtotal');
+    const taxElement = document.getElementById('tax');
+    const totalElement = document.getElementById('total');
+
+    billItems.innerHTML = ''; // Clear bill items
+
+    if (selectedProducts.length === 0) {
+        billItems.innerHTML = '<p>No items in the bill.</p>';
+    } else {
+        selectedProducts.forEach(item => {
+            const itemRow = document.createElement('div');
+            itemRow.classList.add('bill-item');
+            itemRow.innerHTML = `
+                <p>${item.productName} x${item.quantity} - $${item.totalPrice.toFixed(2)}</p>
+                <button onclick="removeFromBill(${item.productId})">Remove</button>
+            `;
+            billItems.appendChild(itemRow);
+        });
+    }
+
+    const subtotal = selectedProducts.reduce((sum, item) => sum + item.totalPrice, 0);
+    const tax = subtotal * 0.1; // 10% tax
+    const total = subtotal + tax;
+
+    subtotalElement.textContent = subtotal.toFixed(2);
+    taxElement.textContent = tax.toFixed(2);
+    totalElement.textContent = total.toFixed(2);
+}
+
+// Remove product from bill
+function removeFromBill(productId) {
+    selectedProducts = selectedProducts.filter(item => item.productId !== productId);
+    updateBillDisplay();
+}
+
+// Checkout
+function checkout() {
+    if (!selectedCustomerId) {
+        alert('Please select a customer.');
+        return;
+    }
+
+    if (!selectedBranchId) {
+        alert('Please select a branch.');
+        return;
+    }
+
+    const billPayload = {
+        employeeId: 1, // Replace with actual employee ID
+        branchId: selectedBranchId,
+        customerId: selectedCustomerId,
+        billInfoRequests: selectedProducts.map(product => ({
+            productId: product.productId,
+            quantity: product.quantity,
+            price: product.totalPrice,
+        })),
+    };
+
+    fetch('/api/bills/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(billPayload),
+    })
+        .then(response => {
+            if (response.ok) {
+                alert('Bill created successfully!');
+                selectedProducts = [];
+                updateBillDisplay();
+            } else {
+                alert('Failed to create bill.');
+            }
+        })
+        .catch(error => console.error('Error during checkout:', error));
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadCustomers();
+    loadBranches();
+    loadProducts();
+
+    const checkoutButton = document.getElementById('checkoutButton');
+    checkoutButton.addEventListener('click', checkout);
 });
-window.onload = function() {
-	loadBills();
-	loadOptions('http://localhost:8080/api/customers', 'customerId', 'firstName');
-	loadOptions('http://localhost:8080/api/branches', 'branchId', 'branchName');
-	loadOptions('http://localhost:8080/api/employees', 'employeeId', 'employeeFirstName');
-};

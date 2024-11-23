@@ -1,46 +1,42 @@
-//package dktech.controller;
-//
-//import dktech.entity.AuthorizeGroup;
-//import dktech.services.AuthorizeGroupService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//import java.util.Map;
-//
-//@RestController
-//@RequestMapping("/api/authorize-groups")
-//public class AuthorizeGroupController {
-//
-//    @Autowired
-//    private AuthorizeGroupService authorizeGroupService;
-//
-//    @PostMapping
-//    public ResponseEntity<AuthorizeGroup> createAuthorizeGroup(@RequestBody Map<String, Object> payload) {
-//        String name = payload.get("name").toString();
-//        String description = payload.get("description").toString();
-//        
-//        AuthorizeGroup authorizeGroup = new AuthorizeGroup(name, description);
-//        AuthorizeGroup createdAuthorizeGroup = authorizeGroupService.saveAuthorizeGroup(authorizeGroup);
-//
-//        return ResponseEntity.ok(createdAuthorizeGroup);
-//    }
-//
-//    @GetMapping
-//    public ResponseEntity<List<AuthorizeGroup>> getAllAuthorizeGroups() {
-//        return ResponseEntity.ok(authorizeGroupService.getAllAuthorizeGroups());
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<AuthorizeGroup> getAuthorizeGroupById(@PathVariable Long id) {
-//        AuthorizeGroup authorizeGroup = authorizeGroupService.getAuthorizeGroupById(id);
-//        return authorizeGroup != null ? ResponseEntity.ok(authorizeGroup) : ResponseEntity.notFound().build();
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteAuthorizeGroup(@PathVariable Long id) {
-//        authorizeGroupService.deleteAuthorizeGroup(id);
-//        return ResponseEntity.noContent().build();
-//    }
-//}
+// src/main/java/dktech/controller/AuthorizeGroupController.java
+package dktech.controller;
+
+import dktech.entity.AuthorizeGroup;
+import dktech.services.AuthorizeGroupService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/authorization-groups")
+public class AuthorizeGroupController {
+
+    @Autowired
+    private AuthorizeGroupService authorizeGroupService;
+
+    @GetMapping
+    public List<AuthorizeGroup> getAllAuthorizationGroups() {
+        return authorizeGroupService.getAllAuthorizationGroups();
+    }
+
+    @GetMapping("/{id}")
+    public AuthorizeGroup getAuthorizationGroupById(@PathVariable Long id) {
+        return authorizeGroupService.getAuthorizationGroupById(id);
+    }
+
+    @PostMapping
+    public AuthorizeGroup createAuthorizationGroup(@RequestBody AuthorizeGroup authorizeGroup) {
+        return authorizeGroupService.createAuthorizationGroup(authorizeGroup);
+    }
+
+    @PutMapping("/{id}")
+    public AuthorizeGroup updateAuthorizationGroup(@PathVariable Long id, @RequestBody AuthorizeGroup authorizeGroup) {
+        return authorizeGroupService.updateAuthorizationGroup(id, authorizeGroup);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteAuthorizationGroup(@PathVariable Long id) {
+        authorizeGroupService.deleteAuthorizationGroup(id);
+    }
+}

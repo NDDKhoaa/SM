@@ -1,99 +1,54 @@
+// Fetch and display positions to populate the dropdown
 function loadPositions() {
-	fetch('http://localhost:8080/api/positions') // Ensure the URL is correct for positions
+	fetch('http://localhost:8080/api/positions')
 		.then(response => response.json())
 		.then(data => {
 			const positionSelect = document.getElementById('positionId');
-			positionSelect.innerHTML = '<option value="" disabled selected>Select Position</option>'; // Reset dropdown
-
-			// Populate the dropdown with position data
+			positionSelect.innerHTML = '<option value="" disabled selected>Select Position</option>';
 			data.forEach(position => {
 				const option = document.createElement('option');
-				option.value = position.positionID; // Use the correct JSON key for position ID
-				option.textContent = position.position; // Use the correct JSON key for position name
+				option.value = position.positionID;
+				option.textContent = position.position;
 				positionSelect.appendChild(option);
 			});
 		})
 		.catch(error => console.error('Error loading positions:', error));
 }
 
+// Fetch and display branches to populate the dropdown
+function loadBranches() {
+	fetch('http://localhost:8080/api/branches')
+		.then(response => response.json())
+		.then(data => {
+			console.log('Branches:', data); // Log the response data to check its structure
+			const branchSelect = document.getElementById('branchId');
+			branchSelect.innerHTML = '<option value="" disabled selected>Select Branch</option>';
+			data.forEach(branch => {
+				const option = document.createElement('option');
+				option.value = branch.branchID;
+				option.textContent = branch.branchName; // Ensure this matches the actual field in the response
+				branchSelect.appendChild(option);
+			});
+		})
+		.catch(error => console.error('Error loading branches:', error));
+}
+
+// Fetch and display stores to populate the dropdown
 function loadStores() {
 	fetch('http://localhost:8080/api/stores')
 		.then(response => response.json())
 		.then(data => {
-			console.log("Stores data:", data);  // Log store data
+			console.log('Stores:', data); // Log the response data to check its structure
 			const storeSelect = document.getElementById('storeId');
-			storeSelect.innerHTML = '<option value="" disabled selected>Select Store</option>'; // Reset dropdown
-
-			// Populate the dropdown with store data
+			storeSelect.innerHTML = '<option value="" disabled selected>Select Store</option>';
 			data.forEach(store => {
-				// Add store as an option in the store dropdown
-				const storeOption = document.createElement('option');
-				storeOption.value = store.storeID;
-				storeOption.textContent = store.storeName; // Assuming storeName is the correct key for store name
-				storeSelect.appendChild(storeOption);
-
-				// Now populate the branch dropdown with the branches for this store
-				const branchSelect = document.getElementById('branchId');
-				store.branches.forEach(branch => {
-					const branchOption = document.createElement('option');
-					branchOption.value = branch.branchID;
-					branchOption.textContent = branch.branchName; // Assuming branchName is the correct key for branch name
-					branchSelect.appendChild(branchOption);
-				});
+				const option = document.createElement('option');
+				option.value = store.storeID;
+				option.textContent = store.storeName; // Ensure this matches the actual field in the response
+				storeSelect.appendChild(option);
 			});
 		})
 		.catch(error => console.error('Error loading stores:', error));
-}
-
-
-
-function addEmployee() {
-	const positionId = document.getElementById('positionId').value;
-	const branchId = document.getElementById('branchId').value;
-	const storeId = document.getElementById('storeId').value;
-
-	console.log('Position:', positionId); // Log the selected position
-	console.log('Branch:', branchId);     // Log the selected branch
-	console.log('Store:', storeId);       // Log the selected store
-
-	const employee = {
-		employeeFirstName: document.getElementById('employeeFirstName').value,
-		employeeLastName: document.getElementById('employeeLastName').value,
-		gender: document.getElementById('gender').value,
-		dob: document.getElementById('dob').value,
-		idNumber: document.getElementById('idNumber').value,
-		address: document.getElementById('address').value,
-		nationality: document.getElementById('nationality').value,
-		taxNumber: document.getElementById('taxNumber').value,
-		positionId: positionId ? parseInt(positionId) : null,
-		branchId: branchId ? parseInt(branchId) : null,
-		storeId: storeId ? parseInt(storeId) : null,
-		accountID: document.getElementById('accountID').value,
-		telephone: document.getElementById('telephone').value,
-		email: document.getElementById('email').value,
-		salary: parseFloat(document.getElementById('salary').value),
-		status: document.getElementById('status').value,
-	};
-
-	console.log("Sending employee data:", employee);  // Log the employee data
-
-	fetch('http://localhost:8080/api/employees', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(employee),
-	})
-		.then(response => {
-			if (response.ok) {
-				alert('Employee added successfully!');
-				loadEmployees();  // Reload the employee list
-			} else {
-				alert('Failed to add employee. Check backend logs for errors.');
-			}
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			alert('Failed to add employee.');
-		});
 }
 
 function loadEmployees() {
@@ -104,28 +59,123 @@ function loadEmployees() {
 			employeeTable.innerHTML = ''; // Clear existing rows
 
 			data.forEach(employee => {
-				const position = employee.position ? employee.position.position : 'N/A';
-				const branch = employee.branch ? employee.branch.branchName : 'N/A';
-				const store = employee.store ? employee.store.storeName : 'N/A';
-
 				const row = employeeTable.insertRow();
+
+				// Check if the gender field is empty and handle it
+				const gender = employee.gender || 'N/A';  // Display 'N/A' if gender is empty
+
 				row.innerHTML = `
                     <td>${employee.employeeID}</td>
                     <td>${employee.employeeFirstName}</td>
                     <td>${employee.employeeLastName}</td>
-                    <td>${employee.gender}</td>
-                    <td>${position}</td>
-                    <td>${branch}</td>
-                    <td>${store}</td>
+                    <td>${gender}</td>
+                    <td>${employee.position ? employee.position.position : 'N/A'}</td>
+                    <td>${employee.branch ? employee.branch.branchName : 'N/A'}</td> <!-- Updated to branchName -->
+                    <td>${employee.store ? employee.store.storeName : 'N/A'}</td> <!-- Updated to storeName -->
                     <td>${employee.status}</td>
+                    <td>
+                        <button onclick="editEmployee(${employee.employeeID})">Edit</button>
+                        <button class="delete-btn" onclick="deleteEmployee(${employee.employeeID})" style="background-color: red;">Delete</button>
+                    </td>
                 `;
 			});
 		})
 		.catch(error => console.error('Error fetching employees:', error));
 }
 
+// Save or update employee
+function saveEmployee() {
+	const employeeID = document.getElementById('employeeID').value;
+	const employee = {
+		employeeID: employeeID,
+		firstName: document.getElementById('employeeFirstName').value,
+		lastName: document.getElementById('employeeLastName').value,
+		gender: document.getElementById('gender').value,
+		dob: document.getElementById('dob').value,
+		idNumber: document.getElementById('idNumber').value,
+		address: document.getElementById('address').value,
+		nationality: document.getElementById('nationality').value,
+		taxNumber: document.getElementById('taxNumber').value,
+		position: { positionID: document.getElementById('positionId').value },
+		branch: { branchID: document.getElementById('branchId').value },
+		store: { storeID: document.getElementById('storeId').value },
+		accountID: document.getElementById('accountID').value,
+		telephone: document.getElementById('telephone').value,
+		email: document.getElementById('email').value,
+		salary: document.getElementById('salary').value,
+		status: document.getElementById('status').value,
+	};
+	console.log("Employee", employee)
+
+	const method = employeeID ? 'PUT' : 'POST';
+	const url = employeeID ? `http://localhost:8080/api/employees/${employeeID}` : 'http://localhost:8080/api/employees';
+
+	fetch(url, {
+		method: method,
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(employee),
+	})
+		.then(response => {
+			if (response.ok) {
+				alert(`${employeeID ? 'Updated' : 'Added'} employee successfully!`);
+				loadEmployees(); // Reload employee list
+				document.getElementById('employeeForm').reset(); // Reset the form
+			} else {
+				alert('Failed to save employee.');
+			}
+		})
+		.catch(error => console.error('Error:', error));
+}
+// Edit employee
+function editEmployee(employeeID) {
+	fetch(`http://localhost:8080/api/employees/${employeeID}`)
+		.then(response => response.json())
+		.then(employee => {
+
+			// Populate the form with employee data
+			document.getElementById('employeeID').value = employee.employeeID;
+			document.getElementById('employeeFirstName').value = employee.employeeFirstName;
+			document.getElementById('employeeLastName').value = employee.employeeLastName;
+			document.getElementById('gender').value = employee.gender || ''; // handle empty gender
+			document.getElementById('dob').value = employee.dob;
+			document.getElementById('idNumber').value = employee.idNumber;
+			document.getElementById('address').value = employee.address;
+			document.getElementById('nationality').value = employee.nationality;
+			document.getElementById('taxNumber').value = employee.taxNumber;
+			document.getElementById('positionId').value =employee.position.positionID;
+			document.getElementById('branchId').value =employee.branch.branchID;
+			document.getElementById('storeId').value = employee.store.storeID;
+			document.getElementById('accountID').value = employee.accountID;
+			document.getElementById('telephone').value = employee.telephone;
+			document.getElementById('email').value = employee.email;
+			document.getElementById('salary').value = employee.salary;
+			document.getElementById('status').value = employee.status;
+			const saveButton = document.getElementById('saveButton');
+			saveButton.textContent = 'Update Employee';
+		})
+		.catch(error => console.error('Error editing employee:', error));
+}
+
+// Delete employee
+function deleteEmployee(employeeID) {
+	if (confirm('Are you sure you want to delete this employee?')) {
+		fetch(`http://localhost:8080/api/employees/${employeeID}`, { method: 'DELETE' })
+			.then(response => {
+				if (response.ok) {
+					alert('Employee deleted successfully!');
+					loadEmployees(); // Reload employee list
+				} else {
+					alert('Failed to delete employee.');
+				}
+			})
+			.catch(error => console.error('Error deleting employee:', error));
+	}
+}
+
+// Initial page load
 window.onload = function() {
-	loadEmployees();
 	loadPositions();
+	loadBranches();
 	loadStores();
+	loadEmployees();
 };

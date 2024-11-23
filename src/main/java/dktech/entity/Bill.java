@@ -2,6 +2,7 @@ package dktech.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,17 +30,20 @@ public class Bill {
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
-	@Column(name = "tax",nullable = false)
+	@Column(name = "tax", nullable = false)
 	private double tax;
 
-	@Column(name = "total",nullable = false)
+	@Column(name = "total", nullable = false)
 	private double total;
 
 	@Column(name = "created_date", nullable = false)
 	private LocalDate createdDate;
-	
-	@Column(name = "status",nullable = false, length = 20)
+
+	@Column(name = "status", nullable = false, length = 20)
 	private String status;
+
+	@OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<BillInfo> billinfos;
 
 	// Constructors, Getters, Setters, and toString
 
@@ -56,6 +60,27 @@ public class Bill {
 		this.total = total;
 		this.createdDate = createdDate;
 		this.status = status;
+	}
+
+	public Bill(Employee employee, Branch branch, Customer customer, double tax, double total, LocalDate createdDate,
+			String status, List<BillInfo> billinfos) {
+		super();
+		this.employee = employee;
+		this.branch = branch;
+		this.customer = customer;
+		this.tax = tax;
+		this.total = total;
+		this.createdDate = createdDate;
+		this.status = status;
+		this.billinfos = billinfos;
+	}
+
+	public List<BillInfo> getBillinfos() {
+		return billinfos;
+	}
+
+	public void setBillinfos(List<BillInfo> billinfos) {
+		this.billinfos = billinfos;
 	}
 
 	// Getters and Setters
