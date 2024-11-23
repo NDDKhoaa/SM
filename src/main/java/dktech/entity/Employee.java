@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -49,18 +50,6 @@ public class Employee {
 	@Column(name = "taxNumber", nullable = true, length = 20)
 	private String taxNumber;
 
-	@ManyToOne
-	@JoinColumn(name = "position_id", nullable = true)
-	private Position position;
-
-	@ManyToOne
-	@JoinColumn(name = "branch_id", nullable = true)
-	private Branch branch;
-
-	@ManyToOne
-	@JoinColumn(name = "store_id", nullable = true)
-	private Store store;
-
 	@Column(name = "accountID", nullable = true, length = 50)
 	private String accountID;
 
@@ -82,6 +71,41 @@ public class Employee {
 	@OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private List<Customer> customers;
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "position_id", nullable = true)
+	private Position position;
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "branch_id", nullable = true)
+	private Branch branch;
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "store_id", nullable = true)
+	private Store store;
+
+	@JsonProperty("positionID")
+	public Long getPositionID() {
+		return position != null ? position.getPositionID() : null;
+	}
+
+	@JsonProperty("branchID")
+	public Long getBranchID() {
+		return branch != null ? branch.getBranchID() : null;
+	}
+
+	@JsonProperty("storeID")
+	public Long getStoreID() {
+		return store != null ? store.getStoreID() : null;
+	}
+
+	@JsonProperty("customerIDs")
+	public List<Long> getCustomerIDs() {
+		return customers != null ? customers.stream().map(Customer::getCustomerID).toList() : null;
+	}
 
 	// Constructors, Getters, Setters, and toString
 

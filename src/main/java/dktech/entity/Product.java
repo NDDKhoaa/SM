@@ -2,6 +2,9 @@ package dktech.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,34 +20,39 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "product_id",nullable = false)
+	@Column(name = "product_id", nullable = false)
 	private long productID;
 
-	@Column(name = "product",nullable = false, length = 100)
+	@Column(name = "product", nullable = false, length = 100)
 	private String product;
 
-	@Column(name = "manufacture_date",nullable = false)
+	@Column(name = "manufacture_date", nullable = false)
 	private LocalDate manufactureDate;
 
-	@Column(name = "expiration_date",nullable = false)
+	@Column(name = "expiration_date", nullable = false)
 	private LocalDate expirationDate;
 
-	@Column(name = "color",nullable = true, length = 50)
+	@Column(name = "color", nullable = true, length = 50)
 	private String color;
 
+	@Column(name = "type", nullable = false, length = 50)
+	private String type;
+
+	@Column(name = "price", nullable = false)
+	private double price;
+
+	@Column(name = "created_date", nullable = false)
+	private LocalDate createdDate;
+
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "category_id", nullable = false)
 	private Category category;
 
-	@Column(name = "type",nullable = false, length = 50)
-	private String type;
-
-	@Column(name = "price",nullable = false)
-	private double price;
-
-	@Column(name = "created_date",nullable = false)
-	private LocalDate createdDate;
-
+	@JsonProperty("categoryID")
+	public Long getCategoryID() {
+		return category != null ? category.getCategoryID() : null;
+	}
 	// Constructors, Getters, Setters, and toString
 
 	public Product() {

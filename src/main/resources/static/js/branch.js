@@ -14,7 +14,7 @@ function loadBranches() {
                     <td>${branch.telephone || 'N/A'}</td>
                     <td>${branch.status}</td>
                     <td>
-                        <button onclick="editBranch(${branch.branchID})">Edit</button>
+                        <button class="edit-btn" onclick="editBranch(${branch.branchID})">Edit</button>
                         <button class="delete-btn" onclick="deleteBranch(${branch.branchID})" style="background-color: red;">Delete</button>
                     </td>
                 `;

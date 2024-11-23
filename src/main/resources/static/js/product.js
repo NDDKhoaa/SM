@@ -21,7 +21,7 @@ function loadProducts() {
                         <td>${product.type}</td>
                         <td>${product.price}</td>
                         <td>
-                            <button onclick="editProduct(${product.productID})">Edit</button>
+                            <button class="edit-btn" onclick="editProduct(${product.productID})">Edit</button>
                             <button class="delete-btn" onclick="deleteProduct(${product.productID})" style="background-color: red;">Delete</button>
                         </td>
                     `;

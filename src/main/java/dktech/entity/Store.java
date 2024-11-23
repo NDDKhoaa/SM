@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -44,6 +45,11 @@ public class Store {
 	@OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private List<Branch> branches;
+
+	@JsonProperty("branchIDs")
+	public List<Long> getBranchIDs() {
+		return branches != null ? branches.stream().map(Branch::getBranchID).toList() : null;
+	}
 
 	public Store() {
 		super();

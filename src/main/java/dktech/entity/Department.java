@@ -1,10 +1,22 @@
+
+// Department.java
 package dktech.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "departments")
@@ -12,16 +24,16 @@ public class Department {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "department_id",nullable = false)
+	@Column(name = "department_id", nullable = false)
 	private long departmentID;
 
-	@Column(name = "department",nullable = false, length = 100)
+	@Column(name = "department", nullable = false, length = 100)
 	private String department;
 
-	@Column(name = "description",nullable = true, length = 255)
+	@Column(name = "description", nullable = true, length = 255)
 	private String description;
 
-	@Column(name = "created_date",nullable = false)
+	@Column(name = "created_date", nullable = false)
 	private LocalDate createdDate;
 
 	@OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -80,9 +92,14 @@ public class Department {
 		this.positions = positions;
 	}
 
+	@JsonProperty("positionIDs")
+	public List<Long> getPositionIDs() {
+		return positions != null ? positions.stream().map(Position::getPositionID).collect(Collectors.toList()) : null;
+	}
+
 	@Override
 	public String toString() {
 		return "Department [departmentID=" + departmentID + ", department=" + department + ", description="
-				+ description + ", createdDate=" + createdDate + ", positions=" + positions + "]";
+				+ description + ", createdDate=" + createdDate + "]";
 	}
 }

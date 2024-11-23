@@ -45,7 +45,7 @@ function loadCategories() {
                     <td>${category.category}</td>
                     <td>${category.createdDate}</td>
                     <td>
-                        <button onclick="editCategory(${category.categoryID})">Edit</button>
+                        <button class="edit-btn" onclick="editCategory(${category.categoryID})">Edit</button>
                         <button class="delete-btn" onclick="deleteCategory(${category.categoryID})">Delete</button>
                     </td>
                 `;

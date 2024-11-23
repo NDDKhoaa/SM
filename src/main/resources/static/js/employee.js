@@ -74,7 +74,7 @@ function loadEmployees() {
                     <td>${employee.store ? employee.store.storeName : 'N/A'}</td> <!-- Updated to storeName -->
                     <td>${employee.status}</td>
                     <td>
-                        <button onclick="editEmployee(${employee.employeeID})">Edit</button>
+                        <button class="edit-btn" onclick="editEmployee(${employee.employeeID})">Edit</button>
                         <button class="delete-btn" onclick="deleteEmployee(${employee.employeeID})" style="background-color: red;">Delete</button>
                     </td>
                 `;

@@ -1,10 +1,11 @@
+
 package dktech.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "bills")
@@ -43,6 +44,7 @@ public class Bill {
 	private String status;
 
 	@OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private List<BillInfo> billinfos;
 
 	// Constructors, Getters, Setters, and toString
@@ -146,6 +148,21 @@ public class Bill {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	@JsonProperty("employeeID")
+	public Long getEmployeeID() {
+		return employee != null ? employee.getEmployeeID() : null;
+	}
+
+	@JsonProperty("branchID")
+	public Long getBranchID() {
+		return branch != null ? branch.getBranchID() : null;
+	}
+
+	@JsonProperty("customerID")
+	public Long getCustomerID() {
+		return customer != null ? customer.getCustomerID() : null;
 	}
 
 	@Override

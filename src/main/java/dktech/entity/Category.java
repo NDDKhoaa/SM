@@ -1,10 +1,19 @@
 package dktech.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "categories")
@@ -12,18 +21,23 @@ public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "category_id",nullable = false)
+	@Column(name = "category_id", nullable = false)
 	private long categoryID;
 
-	@Column(name = "category",nullable = false, length = 100)
+	@Column(name = "category", nullable = false, length = 100)
 	private String category;
 
-	@Column(name = "created_date",nullable = false)
+	@Column(name = "created_date", nullable = false)
 	private LocalDate createdDate;
 
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private List<Product> products;
+
+	@JsonProperty("productIDs")
+	public List<Long> getProductIDs() {
+		return products != null ? products.stream().map(Product::getProductID).toList() : null;
+	}
 
 	// Constructors, Getters, Setters, and toString
 

@@ -2,6 +2,9 @@ package dktech.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,21 +20,27 @@ public class Storage {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "storage_id",nullable = false)
+	@Column(name = "storage_id", nullable = false)
 	private long storageID;
 
-	@ManyToOne
-	@JoinColumn(name = "product_id", nullable = false)
-	private Product product;
-
-	@Column(name = "quantity",nullable = false)
+	@Column(name = "quantity", nullable = false)
 	private int quantity;
 
-	@Column(name = "status",nullable = false, length = 20)
+	@Column(name = "status", nullable = false, length = 20)
 	private String status;
 
 	@Column(name = "created_date", nullable = false)
 	private LocalDate createdDate;
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "product_id", nullable = false)
+	private Product product;
+
+	@JsonProperty("productID")
+	public Long getProductID() {
+		return product != null ? product.getProductID() : null;
+	}
 
 	// Constructors, Getters, Setters, and toString
 

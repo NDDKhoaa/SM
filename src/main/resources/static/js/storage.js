@@ -65,7 +65,7 @@ function loadStorages() {
                     <td>${storage.quantity}</td>
                     <td>${storage.status}</td>
                     <td>
-                        <button onclick="editStorage(${storage.storageID})">Edit</button>
+                        <button class="edit-btn" onclick="editStorage(${storage.storageID})">Edit</button>
                         <button class="delete-btn" onclick="deleteStorage(${storage.storageID})">Delete</button>
                     </td>
                 `;

@@ -1,5 +1,8 @@
 package dktech.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -30,9 +33,14 @@ public class Customer {
     private String address;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "created_by", nullable = false)
     private Employee createdBy;
 
+	@JsonProperty("employeeID")
+	public Long getEmployeeID() {
+		return createdBy != null ? createdBy.getEmployeeID() : null; // Safely return employee ID or null
+	}
     // Constructors, Getters, Setters, and toString
 
     public Customer() {

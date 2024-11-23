@@ -1,6 +1,11 @@
+
+// AuthorizeGroup.java
 package dktech.entity;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,7 +50,6 @@ public class AuthorizeGroup {
 		this.description = description;
 	}
 
-	// Getters and Setters
 	public long getAuthorizeGroupID() {
 		return authorizeGroupID;
 	}
@@ -84,6 +88,16 @@ public class AuthorizeGroup {
 
 	public void setSanctions(Set<Sanction> sanctions) {
 		this.sanctions = sanctions;
+	}
+
+	@JsonProperty("accountIDs")
+	public Set<Long> getAccountIDs() {
+		return accounts != null ? accounts.stream().map(Account::getAccountID).collect(Collectors.toSet()) : null;
+	}
+
+	@JsonProperty("sanctionIDs")
+	public Set<Long> getSanctionIDs() {
+		return sanctions != null ? sanctions.stream().map(Sanction::getSanctionID).collect(Collectors.toSet()) : null;
 	}
 
 	@Override

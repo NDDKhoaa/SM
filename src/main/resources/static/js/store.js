@@ -15,7 +15,7 @@ function loadStores() {
                     <td>${store.email || 'N/A'}</td>
                     <td>${store.status}</td>
                     <td>
-                        <button onclick="editStore(${store.storeID})">Edit</button>
+                        <button class="edit-btn" onclick="editStore(${store.storeID})">Edit</button>
                         <button class="delete-btn" onclick="deleteStore(${store.storeID})">Delete</button>
                     </td>
                 `;

@@ -1,11 +1,12 @@
+
+// Authorize.java
 package dktech.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -16,7 +17,6 @@ import jakarta.persistence.Table;
 public class Authorize {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "authorize_id", nullable = false)
 	private long authorizeID;
 
@@ -29,7 +29,6 @@ public class Authorize {
 	@JsonIgnore
 	@JoinColumn(name = "account_id", nullable = false)
 	private Account account;
-
 
 	@ManyToOne
 	@JsonIgnore
@@ -56,7 +55,6 @@ public class Authorize {
 		this.authorizeID = authorizeID;
 	}
 
-	// Getters and Setters
 	public AuthorizeGroup getAuthorizeGroup() {
 		return authorizeGroup;
 	}
@@ -81,10 +79,24 @@ public class Authorize {
 		this.sanction = sanction;
 	}
 
+	@JsonProperty("authorizeGroupID")
+	public Long getAuthorizeGroupID() {
+		return authorizeGroup != null ? authorizeGroup.getAuthorizeGroupID() : null;
+	}
+
+	@JsonProperty("accountID")
+	public Long getAccountID() {
+		return account != null ? account.getAccountID() : null;
+	}
+
+	@JsonProperty("sanctionID")
+	public Long getSanctionID() {
+		return sanction != null ? sanction.getSanctionID() : null;
+	}
+
 	@Override
 	public String toString() {
 		return "Authorize [authorizeID=" + authorizeID + ", authorizeGroup=" + authorizeGroup + ", account=" + account
 				+ ", sanction=" + sanction + "]";
 	}
-
 }

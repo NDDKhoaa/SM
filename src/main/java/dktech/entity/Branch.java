@@ -20,37 +20,38 @@ public class Branch {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "branch_id",nullable = false)
+	@Column(name = "branch_id", nullable = false)
 	private long branchID;
 
-	@Column(name = "branch_name",nullable = false, length = 100)
+	@Column(name = "branch_name", nullable = false, length = 100)
 	private String branchName;
 
-	@Column(name = "location",nullable = true, length = 200)
+	@Column(name = "location", nullable = true, length = 200)
 	private String location;
 
-	@Column(name = "telephone",nullable = true, length = 20)
+	@Column(name = "telephone", nullable = true, length = 20)
 	private String telephone;
 
-	@Column(name = "email",nullable = true, length = 100)
+	@Column(name = "email", nullable = true, length = 100)
 	private String email;
 
-	@Column(name = "created_date",nullable = false)
+	@Column(name = "created_date", nullable = false)
 	private LocalDate createdDate;
 
-	@Column(name = "status",nullable = false)
+	@Column(name = "status", nullable = false)
 	private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "store_id", nullable = false)
-    @JsonIgnore // Keep the full store object ignored
-    private Store store;
+	@ManyToOne
+	@JoinColumn(name = "store_id", nullable = false)
+	@JsonIgnore // Keep the full store object ignored
+	private Store store;
 
-    // Add a getter for storeID to expose only the storeID
-    @JsonProperty("storeID")
-    public Long getStoreID() {
-        return store != null ? store.getStoreID() : null; // Safely return store ID or null
-    }
+	// Add a getter for storeID to expose only the storeID
+	@JsonProperty("storeID")
+	public Long getStoreID() {
+		return store != null ? store.getStoreID() : null; // Safely return store ID or null
+	}
+
 	public Branch() {
 		super();
 	}

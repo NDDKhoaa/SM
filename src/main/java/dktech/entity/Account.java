@@ -1,9 +1,13 @@
+
+// Account.java
 package dktech.entity;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,98 +24,106 @@ import jakarta.persistence.Table;
 @Table(name = "accounts")
 public class Account {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "account_id", nullable = false)
-    private long accountID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "account_id", nullable = false)
+	private long accountID;
 
-    @Column(name = "username", nullable = false, length = 50)
-    private String username;
+	@Column(name = "username", nullable = false, length = 50)
+	private String username;
 
-    @Column(name = "password", nullable = false, length = 100)
-    private String password;
+	@Column(name = "password", nullable = false, length = 100)
+	private String password;
 
-    @Column(name = "email", nullable = false, length = 100)
-    private String email;
+	@Column(name = "email", nullable = false, length = 100)
+	private String email;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "employee_id", nullable = false)
+	private Employee employee;
 
-    @ManyToMany
-    @JoinTable(
-        name = "account_authorize_group",
-        joinColumns = @JoinColumn(name = "account_id"),
-        inverseJoinColumns = @JoinColumn(name = "authorize_group_id")
-    )
-    private Set<AuthorizeGroup> authorizeGroups;
+	@ManyToMany
+	@JoinTable(name = "account_authorize_group", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "authorize_group_id"))
+	private Set<AuthorizeGroup> authorizeGroups;
 
-    // Constructors, Getters, Setters, and toString
+	// Constructors, Getters, Setters, and toString
 
-    public Account() {
-        super();
-    }
+	public Account() {
+		super();
+	}
 
-    public Account(String username, String password, String email, Employee employee) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.employee = employee;
-        this.authorizeGroups = new HashSet<>();
-    }
+	public Account(String username, String password, String email, Employee employee) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.employee = employee;
+		this.authorizeGroups = new HashSet<>();
+	}
 
-    // Getters and Setters
-    public long getAccountID() {
-        return accountID;
-    }
+	public long getAccountID() {
+		return accountID;
+	}
 
-    public void setAccountID(long accountID) {
-        this.accountID = accountID;
-    }
+	public void setAccountID(long accountID) {
+		this.accountID = accountID;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public Employee getEmployee() {
-        return employee;
-    }
+	public Employee getEmployee() {
+		return employee;
+	}
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
 
-    public Set<AuthorizeGroup> getAuthorizeGroups() {
-        return authorizeGroups;
-    }
+	public Set<AuthorizeGroup> getAuthorizeGroups() {
+		return authorizeGroups;
+	}
 
-    public void setAuthorizeGroups(Set<AuthorizeGroup> authorizeGroups) {
-        this.authorizeGroups = authorizeGroups;
-    }
+	public void setAuthorizeGroups(Set<AuthorizeGroup> authorizeGroups) {
+		this.authorizeGroups = authorizeGroups;
+	}
 
-    @Override
-    public String toString() {
-        return "Account [accountID=" + accountID + ", username=" + username + ", email=" + email + ", employee=" + employee + "]";
-    }
+	@JsonProperty("employeeID")
+	public Long getEmployeeID() {
+		return employee != null ? employee.getEmployeeID() : null;
+	}
+
+	@JsonProperty("authorizeGroupIDs")
+	public Set<Long> getAuthorizeGroupIDs() {
+		return authorizeGroups != null
+				? authorizeGroups.stream().map(AuthorizeGroup::getAuthorizeGroupID).collect(Collectors.toSet())
+				: null;
+	}
+
+	@Override
+	public String toString() {
+		return "Account [accountID=" + accountID + ", username=" + username + ", email=" + email + ", employee="
+				+ employee + "]";
+	}
 }

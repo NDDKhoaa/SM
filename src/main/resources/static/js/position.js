@@ -32,7 +32,7 @@ function loadPositions() {
                     <td>${position.department ? position.department.department : 'N/A'}</td>
                     <td>${position.description || 'N/A'}</td>
                     <td>
-                        <button onclick="editPosition(${position.positionID})">Edit</button>
+                        <button class="edit-btn" onclick="editPosition(${position.positionID})">Edit</button>
                         <button class="delete-btn" onclick="deletePosition(${position.positionID})" style="background-color: red;">Delete</button>
                     </td>
                 `;
