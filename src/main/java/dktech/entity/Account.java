@@ -1,5 +1,3 @@
-
-// Account.java
 package dktech.entity;
 
 import java.util.HashSet;
@@ -11,21 +9,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.ToString;
 
 @Entity
 @Table(name = "accounts")
+@ToString(exclude = { "employee", "authorizeGroups" })
 public class Account {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "account_id", nullable = false)
 	private long accountID;
 
@@ -44,10 +42,15 @@ public class Account {
 	private Employee employee;
 
 	@ManyToMany
+	@JsonIgnore
 	@JoinTable(name = "account_authorize_group", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "authorize_group_id"))
 	private Set<AuthorizeGroup> authorizeGroups;
 
-	// Constructors, Getters, Setters, and toString
+	@OneToMany(mappedBy = "account")
+	@JsonIgnore
+	private Set<Authorize> authorizations;
+
+	// Constructors, Getters, Setters
 
 	public Account() {
 		super();
@@ -109,6 +112,30 @@ public class Account {
 		this.authorizeGroups = authorizeGroups;
 	}
 
+	public Set<Authorize> getAuthorizations() {
+		return authorizations;
+	}
+
+	public void setAuthorizations(Set<Authorize> authorizations) {
+		this.authorizations = authorizations;
+	}
+
+	public Set<Sanction> getSanctions() {
+		Set<Sanction> sanctions = new HashSet<>();
+
+		// Add sanctions from authorize groups
+		for (AuthorizeGroup group : authorizeGroups) {
+			sanctions.addAll(group.getSanctions());
+		}
+
+		// Add sanctions from authorizations
+		for (Authorize authorize : authorizations) {
+			sanctions.add(authorize.getSanction());
+		}
+
+		return sanctions;
+	}
+
 	@JsonProperty("employeeID")
 	public Long getEmployeeID() {
 		return employee != null ? employee.getEmployeeID() : null;
@@ -121,9 +148,10 @@ public class Account {
 				: null;
 	}
 
-	@Override
-	public String toString() {
-		return "Account [accountID=" + accountID + ", username=" + username + ", email=" + email + ", employee="
-				+ employee + "]";
+	@JsonProperty("authorizeIDs")
+	public Set<Long> getAuthorizeIDs() {
+		return authorizations != null
+				? authorizations.stream().map(Authorize::getAuthorizeID).collect(Collectors.toSet())
+				: null;
 	}
 }

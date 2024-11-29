@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Layout</title>
+<title>Error</title>
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/fragments.css">
 </head>
@@ -13,8 +13,18 @@
 	<div class="main">
 		<div th:replace="~{fragments/header :: header}"></div>
 
-		<div class="content">
-			<!-- content goes here -->
+		<div class="content error-page">
+			<h1>Error Page</h1>
+			<p>
+				Status Code: <span th:text="${statusCode}">Status Code</span>
+			</p>
+			<p>
+				Error Message: <span th:text="${errorMessage}">Error Message</span>
+			</p>
+			<p>
+				Error Type: <span th:text="${errorType}">Error Type</span>
+			</p>
+			<a th:href="@{/}">Go to Home</a>
 		</div>
 	</div>
 	<script src="/js/fragments.js"></script>

@@ -5,8 +5,8 @@ import java.util.List;
 
 public interface AuthorizeService {
     List<Authorize> getAllAuthorizations();
-    Authorize getAuthorizationById(Long id);
+    Authorize getAuthorizationById(long id);
     Authorize createAuthorization(Authorize authorize);
-    Authorize updateAuthorization(Long id, Authorize authorize);
-    void deleteAuthorization(Long id);
+    Authorize updateAuthorization(long id, Authorize authorize);
+    void deleteAuthorization(long id);
 }

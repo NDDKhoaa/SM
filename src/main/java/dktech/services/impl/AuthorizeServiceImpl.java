@@ -21,7 +21,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
     }
 
     @Override
-    public Authorize getAuthorizationById(Long id) {
+    public Authorize getAuthorizationById(long id) {
         return authorizeRepository.findById(id).orElse(null);
     }
 
@@ -31,7 +31,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
     }
 
     @Override
-    public Authorize updateAuthorization(Long id, Authorize authorize) {
+    public Authorize updateAuthorization(long id, Authorize authorize) {
         Optional<Authorize> existingAuthorization = authorizeRepository.findById(id);
         if (existingAuthorization.isPresent()) {
             authorize.setAuthorizeID(id);
@@ -41,7 +41,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
     }
 
     @Override
-    public void deleteAuthorization(Long id) {
+    public void deleteAuthorization(long id) {
         authorizeRepository.deleteById(id);
     }
 }

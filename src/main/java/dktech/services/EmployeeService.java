@@ -1,7 +1,8 @@
 package dktech.services;
 
-import dktech.entity.Employee;
 import java.util.List;
+
+import dktech.entity.Employee;
 
 public interface EmployeeService {
     Employee createEmployee(Employee Employee);

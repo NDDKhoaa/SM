@@ -9,4 +9,5 @@ public interface AuthorizeGroupService {
     AuthorizeGroup createAuthorizationGroup(AuthorizeGroup authorizeGroup);
     AuthorizeGroup updateAuthorizationGroup(Long id, AuthorizeGroup authorizeGroup);
     void deleteAuthorizationGroup(Long id);
+    AuthorizeGroup getAuthorizationGroupByName(String name);
 }

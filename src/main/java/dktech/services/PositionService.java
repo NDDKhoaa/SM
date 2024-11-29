@@ -8,4 +8,5 @@ public interface PositionService {
     List<Position> getAllPositions();
     Position getPositionById(long id);
     void deletePosition(long id);
+    public Position findPositionByName(String name);
 }

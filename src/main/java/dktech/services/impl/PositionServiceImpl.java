@@ -33,4 +33,8 @@ public class PositionServiceImpl implements PositionService {
     public void deletePosition(long id) {
         PositionRepository.deleteById(id);
     }
+    
+	public Position findPositionByName(String name) {
+		return PositionRepository.findByPosition(name);
+	}
 }

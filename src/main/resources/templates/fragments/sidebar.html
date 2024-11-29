@@ -1,43 +1,72 @@
-<!-- fragments/sidebar.html -->
-<div th:fragment="sidebar">
+<div th:fragment="sidebar" th:with="sanctions=${sanctions}">
 	<div class="sidebar">
 		<h2>POS System</h2>
 
 		<!-- Store Section with Submenu -->
 		<div class="menu-section">
-			<a href="/store">Stores</a>
+			<a th:href="@{/store(s=${1})}"
+				th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 1)}">Stores</a>
 			<ul class="submenu">
-				<li><a href="/store">Stores</a></li>
-				<li><a href="/department">Departments</a></li>
-				<li><a href="/position">Positions</a></li>
-				<li><a href="/branch">Branches</a></li>
-				<li><a href="/employee">Employees</a></li>
-				<li><a href="/customer">Customers</a></li>
+				<li><a th:href="@{/store(s=${2})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 2)}">Stores</a>
+				</li>
+				<li><a th:href="@{/department(s=${3})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 3)}">Departments</a>
+				</li>
+				<li><a th:href="@{/position(s=${4})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 4)}">Positions</a>
+				</li>
+				<li><a th:href="@{/branch(s=${5})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 5)}">Branches</a>
+				</li>
+				<li><a th:href="@{/employee(s=${6})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 6)}">Employees</a>
+				</li>
+				<li><a th:href="@{/customer(s=${7})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 7)}">Customers</a>
+				</li>
 			</ul>
 		</div>
 
 		<!-- Product Section with Submenu -->
 		<div class="menu-section">
-			<a href="/product">Products</a>
+			<a th:href="@{/product(s=${8})}"
+				th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 8)}">Products</a>
 			<ul class="submenu">
-				<li><a href="/product">Products</a></li>
-				<li><a href="/category">Category</a></li>
-				<li><a href="/storage">Storages</a></li>
+				<li><a th:href="@{/product(s=${9})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 9)}">Products</a>
+				</li>
+				<li><a th:href="@{/category(s=${10})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 10)}">Category</a>
+				</li>
+				<li><a th:href="@{/storage(s=${11})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 11)}">Storages</a>
+				</li>
 			</ul>
 		</div>
 
 		<!-- Security Section with Submenu -->
 		<div class="menu-section">
-			<a href="/product">Security</a>
+			<a th:href="@{/security(s=${12})}"
+				th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 12)}">Security</a>
 			<ul class="submenu">
-				<li><a href="/account">Account</a></li>
-				<li><a href="/authorize">Authorize</a></li>
-				<li><a href="/authorizegroup">AuthorizeGroup</a></li>
-				<li><a href="/sanction">Sanctions</a></li>
+				<li><a th:href="@{/account(s=${13})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 13)}">Account</a>
+				</li>
+				<li><a th:href="@{/authorize(s=${14})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 14)}">Authorize</a>
+				</li>
+				<li><a th:href="@{/authorizegroup(s=${15})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 15)}">AuthorizeGroup</a>
+				</li>
+				<li><a th:href="@{/sanction(s=${16})}"
+						th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 16)}">Sanctions</a>
+				</li>
 			</ul>
 		</div>
 
 		<!-- Additional Links -->
-		<a href="/bill">Bills</a>
+		<a th:href="@{/bill(s=${17})}"
+			th:if="${sanctions != null and @thymeleafUtils.containsSanctionID(sanctions, 17)}">Bills</a>
 	</div>
 </div>
