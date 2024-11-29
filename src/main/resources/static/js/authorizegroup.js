@@ -13,7 +13,7 @@ function loadAuthorizeGroups() {
                     <td>${group.id}</td>
                     <td>${group.name}</td>
                     <td>
-                        <button onclick="editAuthorizeGroup(${group.id})">Edit</button>
+                        <button class="edit-btn" onclick="editAuthorizeGroup(${group.id})">Edit</button>
                         <button class="delete-btn" onclick="deleteAuthorizeGroup(${group.id})">Delete</button>
                     </td>
                 `;

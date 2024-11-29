@@ -14,7 +14,7 @@ function loadAuthorizations() {
                     <td>${auth.permission}</td>
                     <td>${auth.description || 'N/A'}</td>
                     <td>
-                        <button onclick="editAuthorize(${auth.id})">Edit</button>
+                        <button class="edit-btn" onclick="editAuthorize(${auth.id})">Edit</button>
                         <button class="delete-btn" onclick="deleteAuthorize(${auth.id})">Delete</button>
                     </td>
                 `;

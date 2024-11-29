@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,8 +30,8 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		SanctionVoter sanctionVoter = new SanctionVoter();
 
-		http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/public/**").permitAll()
-				.requestMatchers("/store/**").access((auth, context) -> sanctionVoter.check(auth, context.getRequest()))
+		http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/store/**")
+				.access((auth, context) -> sanctionVoter.check(auth, context.getRequest()))
 				.requestMatchers("/department/**")
 				.access((auth, context) -> sanctionVoter.check(auth, context.getRequest()))
 				.requestMatchers("/position/**")
@@ -60,6 +61,11 @@ public class SecurityConfig {
 				.logout(logout -> logout.permitAll());
 
 		return http.build();
+	}
+
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().requestMatchers("/api/**");
 	}
 
 	@Bean
