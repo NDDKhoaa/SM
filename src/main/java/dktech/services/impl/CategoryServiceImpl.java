@@ -1,41 +1,44 @@
 package dktech.services.impl;
 
-import dktech.entity.Category;
-import dktech.repository.CategoryRepository;
-import dktech.services.CategoryService;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import dktech.entity.Category;
+import dktech.repository.CategoryRepository;
+import dktech.services.CategoryService;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
-    private CategoryRepository CategoryRepository;
+    private CategoryRepository categoryRepository;
 
-    @Override
-    public Category createCategory(Category Category) {
-        return CategoryRepository.save(Category);
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
-    @Override
-    public List<Category> getAllCategorys() {
-        return CategoryRepository.findAll();
+    public Optional<Category> getCategoryById(long id) {
+        return categoryRepository.findById(id);
     }
 
-    @Override
-    public Category getCategoryById(long id) {
-        return CategoryRepository.findById(id).orElse(null);
+    public Category saveCategory(Category category) {
+        return categoryRepository.save(category);
     }
 
-    @Override
+    public Category updateCategory(long id, Category categoryDetails) {
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        category.setCategory(categoryDetails.getCategory());
+        category.setCreatedDate(categoryDetails.getCreatedDate());
+
+        return categoryRepository.save(category);
+    }
+
     public void deleteCategory(long id) {
-        CategoryRepository.deleteById(id);
-    }
-    
-    @Override
-    public Category getCategoryByName(String name) {
-        return CategoryRepository.findByCategory(name);
+        categoryRepository.deleteById(id);
     }
 }

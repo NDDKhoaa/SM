@@ -11,33 +11,47 @@ import dktech.repository.ProductRepository;
 import dktech.services.ProductService;
 
 @Service
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+	@Autowired
+	private ProductRepository productRepository;
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
+	public List<Product> getAllProducts() {
+		return productRepository.findAll();
+	}
 
-    public Product getProductById(long id) {
-        Optional<Product> product = productRepository.findById(id);
-        return product.orElse(null);
-    }
+	public Optional<Product> getProductById(long id) {
+		return productRepository.findById(id);
+	}
 
-    public Product addProduct(Product product) {
-        return productRepository.save(product);
-    }
+	public Product saveProduct(Product product) {
+		return productRepository.save(product);
+	}
 
-    public Product updateProduct(long id, Product product) {
-        if (productRepository.existsById(id)) {
-            product.setProductID(id);
-            return productRepository.save(product);
-        }
-        return null;
-    }
+	public Product updateProduct(long id, Product productDetails) {
+		Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+		product.setProduct(productDetails.getProduct());
+		product.setDescription(productDetails.getDescription());
+		product.setColor(productDetails.getColor());
+		product.setType(productDetails.getType());
+		product.setPrice(productDetails.getPrice());
+		product.setManufactureDate(productDetails.getManufactureDate());
+		product.setExpirationDate(productDetails.getExpirationDate());
+		product.setCreatedDate(productDetails.getCreatedDate());
+		product.setCategory(productDetails.getCategory());
+		return productRepository.save(product);
+	}
 
-    public void deleteProduct(long id) {
-        productRepository.deleteById(id);
+	public boolean deleteProduct(long id) {
+		if (productRepository.existsById(id)) {
+			productRepository.deleteById(id);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+    public Optional<Product> getProductByName(String productName) {
+        return productRepository.findByProduct(productName);
     }
 }

@@ -1,18 +1,12 @@
 package dktech.entity;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -29,17 +23,6 @@ public class Category {
 
 	@Column(name = "created_date", nullable = false)
 	private LocalDate createdDate;
-
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
-	private List<Product> products;
-
-	@JsonProperty("productIDs")
-	public List<Long> getProductIDs() {
-		return products != null ? products.stream().map(Product::getProductID).toList() : null;
-	}
-
-	// Constructors, Getters, Setters, and toString
 
 	public Category() {
 		super();
@@ -73,14 +56,6 @@ public class Category {
 
 	public void setCreatedDate(LocalDate createdDate) {
 		this.createdDate = createdDate;
-	}
-
-	public List<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(List<Product> products) {
-		this.products = products;
 	}
 
 	@Override

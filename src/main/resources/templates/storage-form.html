@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage Form</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/fragments.css">
+</head>
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/header :: header}"></div>
+
+        <div class="content">
+            <h1>Storage Management</h1>
+            <form id="storageForm">
+                <input type="hidden" id="storageId" /> <!-- Hidden storageId field for editing -->
+                <select id="productId" required>
+                    <option value="" disabled selected>Select Product</option>
+                </select>
+                <input type="number" id="quantity" placeholder="Quantity" required />
+                <select id="measurement" required>
+                    <option value="" disabled selected>Select Measurement</option>
+                    <optgroup label="Length">
+                        <option value="Cm">Cm - Centimeter</option>
+                        <option value="M">M - Meter</option>
+                    </optgroup>
+                    <optgroup label="Weight">
+                        <option value="Mg">Mg - Milligram</option>
+                        <option value="G">G - Gram</option>
+                        <option value="Kg">Kg - Kilogram</option>
+                    </optgroup>
+                    <optgroup label="Volume">
+                        <option value="Ml">Ml - Milliliter</option>
+                        <option value="L">L - Liter</option>
+                    </optgroup>
+                </select>
+                <input type="date" id="createdDate" placeholder="Created Date" required />
+                <button type="button" onclick="saveStorage()">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/storage-form.js"></script>
+</body>
+</html>

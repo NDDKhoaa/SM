@@ -1,36 +1,59 @@
 package dktech.services.impl;
 
-import dktech.entity.Storage;
-import dktech.repository.StorageRepository;
-import dktech.services.StorageService;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import dktech.entity.Product;
+import dktech.entity.Storage;
+import dktech.repository.ProductRepository;
+import dktech.repository.StorageRepository;
 
 @Service
-public class StorageServiceImpl implements StorageService {
+public class StorageServiceImpl {
 
-    @Autowired
-    private StorageRepository StorageRepository;
+	@Autowired
+	private StorageRepository storageRepository;
 
-    @Override
-    public Storage saveStorage(Storage Storage) {
-        return StorageRepository.save(Storage);
-    }
+	@Autowired
+	private ProductRepository productRepository;
 
-    @Override
-    public List<Storage> getAllStorages() {
-        return StorageRepository.findAll();
-    }
+	public List<Storage> getAllStorages(int page, int size) {
+	    Pageable pageable = PageRequest.of(page, size);
+	    Page<Storage> storagePage = storageRepository.findAll(pageable);
+	    return storagePage.getContent();
+	}
 
-    @Override
-    public Storage getStorageById(long id) {
-        return StorageRepository.findById(id).orElse(null);
-    }
+	public Optional<Storage> getStorageById(long id) {
+		Optional<Storage> storage = storageRepository.findById(id);
+		return storage.map(this::setProductName);
+	}
 
-    @Override
-    public void deleteStorage(long id) {
-        StorageRepository.deleteById(id);
-    }
+	public Storage saveStorage(Storage storage) {
+		return storageRepository.save(storage);
+	}
+
+	public Storage updateStorage(long id, Storage storageDetails) {
+		Storage storage = storageRepository.findById(id).orElseThrow(() -> new RuntimeException("Storage not found"));
+		storage.setQuantity(storageDetails.getQuantity());
+		storage.setMeasurement(storageDetails.getMeasurement());
+		storage.setCreatedDate(storageDetails.getCreatedDate());
+		storage.setProductID(storageDetails.getProductID());
+		return storageRepository.save(storage);
+	}
+
+	public void deleteStorage(long id) {
+		storageRepository.deleteById(id);
+	}
+
+	private Storage setProductName(Storage storage) {
+		Optional<Product> product = productRepository.findById(storage.getProductID());
+		product.ifPresent(p -> storage.setProductName(p.getProduct()));
+		return storage;
+	}
 }

@@ -1,12 +1,14 @@
 package dktech.services;
 
-import dktech.entity.Category;
 import java.util.List;
+import java.util.Optional;
+
+import dktech.entity.Category;
 
 public interface CategoryService {
-    Category createCategory(Category Category);
-    List<Category> getAllCategorys();
-    Category getCategoryById(long id);
+    List<Category> getAllCategories();
+    Optional<Category> getCategoryById(long id);
+    Category saveCategory(Category category);
+    Category updateCategory(long id, Category categoryDetails);
     void deleteCategory(long id);
-    public Category getCategoryByName(String name);
 }

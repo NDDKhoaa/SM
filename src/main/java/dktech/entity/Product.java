@@ -26,42 +26,38 @@ public class Product {
 	@Column(name = "product", nullable = false, length = 100)
 	private String product;
 
-	@Column(name = "manufacture_date", nullable = false)
-	private LocalDate manufactureDate;
-
-	@Column(name = "expiration_date", nullable = false)
-	private LocalDate expirationDate;
+	@Column(name = "description", nullable = true, length = 255)
+	private String description;
 
 	@Column(name = "color", nullable = true, length = 50)
 	private String color;
 
-	@Column(name = "type", nullable = false, length = 50)
+	@Column(name = "type", nullable = true, length = 50)
 	private String type;
 
-	@Column(name = "price", nullable = false)
+	@Column(name = "price", nullable = true)
 	private double price;
+	
+	@Column(name = "manufacture_date", nullable = true)
+	private LocalDate manufactureDate;
 
-	@Column(name = "created_date", nullable = false)
+	@Column(name = "expiration_date", nullable = true)
+	private LocalDate expirationDate;
+
+	@Column(name = "created_date", nullable = true)
 	private LocalDate createdDate;
 
-	@ManyToOne
-	@JsonIgnore
-	@JoinColumn(name = "category_id", nullable = false)
-	private Category category;
-
-	@JsonProperty("categoryID")
-	public Long getCategoryID() {
-		return category != null ? category.getCategoryID() : null;
-	}
-	// Constructors, Getters, Setters, and toString
+	@Column(name = "category", nullable = true)
+	private String category;
 
 	public Product() {
 		super();
 	}
 
-	public Product(String product, LocalDate manufactureDate, LocalDate expirationDate, String color, Category category,
-			String type, double price, LocalDate createdDate) {
+	public Product(String product, String description, LocalDate manufactureDate, LocalDate expirationDate,
+			String color, String category, String type, double price, LocalDate createdDate) {
 		this.product = product;
+		this.description = description;
 		this.manufactureDate = manufactureDate;
 		this.expirationDate = expirationDate;
 		this.color = color;
@@ -88,6 +84,14 @@ public class Product {
 		this.product = product;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public LocalDate getManufactureDate() {
 		return manufactureDate;
 	}
@@ -112,11 +116,11 @@ public class Product {
 		this.color = color;
 	}
 
-	public Category getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(Category category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 
@@ -146,8 +150,10 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [productID=" + productID + ", product=" + product + ", manufactureDate=" + manufactureDate
-				+ ", expirationDate=" + expirationDate + ", color=" + color + ", category=" + category + ", type="
-				+ type + ", price=" + price + ", createdDate=" + createdDate + "]";
+		return "Product [productID=" + productID + ", product=" + product + ", description=" + description
+				+ ", manufactureDate=" + manufactureDate + ", expirationDate=" + expirationDate + ", color=" + color
+				+ ", type=" + type + ", price=" + price + ", createdDate=" + createdDate + ", category=" + category
+				+ "]";
 	}
+
 }

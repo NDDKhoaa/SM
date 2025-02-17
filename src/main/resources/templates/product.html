@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,54 +9,39 @@
 <link rel="stylesheet" href="/css/fragments.css">
 </head>
 <body>
+
+	<!-- Sidebar -->
 	<div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
 	<div class="main">
+		<!-- Header -->
 		<div th:replace="~{fragments/header :: header}"></div>
 
+		<!-- Main Content -->
 		<div class="content">
-			<h1>Add/Edit Product</h1>
-			<form id="productForm">
-				<input type="hidden" id="productID" />
-				<!-- Hidden field for productID -->
-				<input type="text" id="product" placeholder="Product Name" required />
-				<select id="category" required>
-					<option value="" disabled selected>Select Category</option>
-					<!-- Default Option -->
-					<!-- Categories will be populated dynamically here -->
-				</select> <input type="date" id="manufactureDate" required /> <input
-					type="date" id="expirationDate" required /> <input type="text"
-					id="color" placeholder="Color" /> <input type="text" id="type"
-					placeholder="Product Type" required /> <input type="number"
-					id="price" placeholder="Price" required />
-				<button type="submit">Submit</button>
-			</form>
-
 			<h2>Product List</h2>
-			<table id="productTable">
+			<button class="edit-btn" onclick="createProduct()">Add</button>
+			<table>
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Product</th>
-						<th>Category</th>
-						<!-- Add Category Column -->
-						<th>Manufacture Date</th>
-						<th>Expiration Date</th>
+						<th>Name</th>
+						<th>Description</th>
 						<th>Color</th>
 						<th>Type</th>
 						<th>Price</th>
+						<th>Manufacture Date</th>
+						<th>Expiration Date</th>
+						<th>Category</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="productTableBody">
 					<!-- Products will be dynamically added here -->
 				</tbody>
 			</table>
-
 		</div>
 	</div>
-
 	<script src="/js/product.js"></script>
-	<script src="/js/fragments.js"></script>
 </body>
 </html>

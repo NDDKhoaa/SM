@@ -1,114 +1,195 @@
-// Fetch products and populate the dropdown
-function loadProducts() {
-	fetch('/api/products')
-		.then(response => response.json())
-		.then(products => {
-			const productSelect = document.getElementById('productId');
-			productSelect.innerHTML = '<option value="" disabled selected>Select Product</option>'; // Reset options
 
-			products.forEach(product => {
-				const option = document.createElement('option');
-				option.value = product.productID;  // Use productID as the option value
-				option.textContent = product.product;  // Display the product name
-				productSelect.appendChild(option);
-			});
-		})
-		.catch(error => console.error('Error loading products:', error));
-}
+document.addEventListener('DOMContentLoaded', function() {
+	let currentPage = 0;
+	let pageSize = 10;
 
-// Add or Edit Storage
-function saveStorage() {
-	const storageId = document.getElementById('storageId').value;
-	const productId = document.getElementById('productId').value;
-	const quantity = document.getElementById('quantity').value;
-	const status = document.getElementById('status').value;
+	$('#filterCreatedDate').datepicker({
+		dateFormat: 'yy-mm-dd'
+	});
 
-	const payload = {
-		productId: productId,
-		quantity: quantity,
-		status: status
+	loadStorages();
+
+	function loadStorages(filters = {}, page = 0) {
+		fetch(`/storage/list?page=${page}&size=${pageSize}`)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok ' + response.statusText);
+				}
+				return response.json();
+			})
+			.then(storages => {
+				const tbody = document.getElementById('storageTable').querySelector('tbody');
+				tbody.innerHTML = '';
+				const productPromises = storages.map(storage =>
+					fetch(`/product/view/${storage.productID}`)
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok ' + response.statusText);
+							}
+							return response.json();
+						})
+						.then(product => ({ ...storage, productName: product.product }))
+				);
+
+				Promise.all(productPromises)
+					.then(storagesWithProducts => {
+						if (filters.createdDate) {
+							storagesWithProducts = storagesWithProducts.filter(storage => storage.createdDate === filters.createdDate);
+						}
+						if (filters.productName) {
+							storagesWithProducts = storagesWithProducts.filter(storage => storage.productName.toLowerCase().includes(filters.productName.toLowerCase()));
+						}
+						if (filters.measurement) {
+							storagesWithProducts = storagesWithProducts.filter(storage => storage.measurement.toLowerCase().includes(filters.measurement.toLowerCase()));
+						}
+
+						storagesWithProducts.forEach(storage => {
+							const row = document.createElement('tr');
+							row.innerHTML = `
+	                                <td>${storage.storageID}</td>
+	                                <td>${storage.productName}</td>
+	                                <td>${storage.quantity.toFixed(2)}</td>
+	                                <td>${storage.measurement}</td>
+	                                <td>${storage.createdDate}</td>
+	                                <td>
+	                                    <button class="edit-btn" onclick="editStorage(${storage.storageID})">Edit</button>
+	                                    <button class="delete-btn" onclick="deleteStorage(${storage.storageID})">Delete</button>
+	                                </td>
+	                            `;
+							tbody.appendChild(row);
+						});
+
+						updatePaginationControls(page, storages.length < pageSize);
+					})
+					.catch(error => console.error('Error loading products:', error));
+			})
+			.catch(error => console.error('Error loading storages:', error));
+	}
+
+	function updatePaginationControls(page, isLastPage) {
+		const paginationControls = document.getElementById('paginationControls');
+		paginationControls.innerHTML = `
+	            <button class="edit-btn" onclick="loadStorages({}, ${page - 1})" ${page === 0 ? 'disabled' : ''}>Previous</button>
+	            <span>${page + 1}</span>
+	            <button class="edit-btn" onclick="loadStorages({}, ${page + 1})" ${isLastPage ? 'disabled' : ''}>Next</button>
+	        `;
+	}
+
+	window.loadStorages = loadStorages;
+
+	window.updatePageSize = function() {
+		pageSize = parseInt(document.getElementById('pageSize').value, 10);
+		loadStorages({}, 0);
 	};
 
-	const method = storageId ? 'PUT' : 'POST';
-	const url = storageId
-		? `http://localhost:8080/api/storages/${storageId}` // Edit existing storage
-		: 'http://localhost:8080/api/storages';  // Add new storage
+	window.applyFilters = function() {
+		const filters = {
+			createdDate: $('#filterCreatedDate').val(),
+			productName: $('#filterProductName').val(),
+			measurement: $('#filterMeasurement').val()
+		};
+		loadStorages(filters, 0);
+	};
 
-	fetch(url, {
-		method: method,
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(payload)
-	})
-		.then(response => response.json())
-		.then(data => {
-			console.log('Storage saved:', data);
-			loadStorages();  // Reload storage table after add/edit
-			document.getElementById('storageForm').reset(); // Reset the form
-			document.getElementById('storageId').value = ''; // Reset hidden storageId field
-		})
-		.catch(error => console.error('Error saving storage:', error));
-}
+	window.createStorage = function() {
+		localStorage.setItem('storage', JSON.stringify({ createdDate: new Date().toISOString() }));
+		window.location.href = '/storage-form';
+	}
 
-// Load all storages
-function loadStorages() {
-	fetch('/api/storages')
-		.then(response => response.json())
-		.then(storages => {
-			const tableBody = document.getElementById('storageTable').querySelector('tbody');
-			tableBody.innerHTML = '';  // Clear the table
+	window.editStorage = function(id) {
+		fetch(`/storage/view/${id}`)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok ' + response.statusText);
+				}
+				return response.json();
+			})
+			.then(storage => {
+				localStorage.setItem('storage', JSON.stringify(storage));
+				window.location.href = '/storage-form';
+			})
+			.catch(error => console.error('Error fetching storage:', error));
+	}
 
-			storages.forEach(storage => {
-				const row = document.createElement('tr');
-				row.innerHTML = `
-                    <td>${storage.storageID}</td>
-                    <td>${storage.product ? storage.product.product : 'No Product'}</td>  <!-- Display product name -->
-                    <td>${storage.quantity}</td>
-                    <td>${storage.status}</td>
-                    <td>
-                        <button class="edit-btn" onclick="editStorage(${storage.storageID})">Edit</button>
-                        <button class="delete-btn" onclick="deleteStorage(${storage.storageID})">Delete</button>
-                    </td>
-                `;
-				tableBody.appendChild(row);  // Append the row to the table body
-			});
-		})
-		.catch(error => console.error('Error loading storages:', error));
-}
-
-
-// Edit a storage
-function editStorage(storageID) {
-	fetch(`/api/storages/${storageID}`)
-		.then(response => response.json())
-		.then(storage => {
-			document.getElementById('storageId').value = storage.storageID;
-			document.getElementById('productId').value = storage.product.productID;  // Set product ID
-			document.getElementById('quantity').value = storage.quantity;
-			document.getElementById('status').value = storage.status;
-		})
-		.catch(error => console.error('Error editing storage:', error));
-}
-
-// Delete a storage
-function deleteStorage(storageID) {
-	if (confirm('Are you sure you want to delete this storage?')) {
-		fetch(`/api/storages/${storageID}`, {
-			method: 'DELETE',
+	window.deleteStorage = function(id) {
+		fetch(`/storage/delete/${id}`, {
+			method: 'DELETE'
 		})
 			.then(response => {
-				if (response.ok) {
-					alert('Storage deleted successfully!');
-					loadStorages();  // Reload storage table after delete
-				} else {
-					alert('Failed to delete storage');
+				if (!response.ok) {
+					throw new Error('Network response was not ok ' + response.statusText);
 				}
+				loadStorages();
 			})
 			.catch(error => console.error('Error deleting storage:', error));
 	}
-}
 
-// Load products and storages when the page is loaded
-document.addEventListener('DOMContentLoaded', () => {
-	loadProducts();
-	loadStorages();
+	window.toggleFilter = function() {
+		const filterSection = document.querySelector('.filter-section');
+		filterSection.style.display = filterSection.style.display === 'none' ? 'block' : 'none';
+	}
+
+	window.exportData = function() {
+		const filters = {
+			createdDate: $('#filterCreatedDate').val(),
+			productName: $('#filterProductName').val(),
+			measurement: $('#filterMeasurement').val()
+		};
+		const queryString = new URLSearchParams(filters).toString();
+		const page = currentPage;
+		const size = pageSize;
+
+		fetch(`/storage/export?${queryString}&page=${page}&size=${size}`)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok ' + response.statusText);
+				}
+				return response.blob();
+			})
+			.then(blob => {
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'storages.csv';
+				document.body.appendChild(a);
+				a.click();
+				window.URL.revokeObjectURL(url);
+			})
+			.catch(error => console.error('Error exporting data:', error));
+	};
+
+	window.importData = function() {
+		document.getElementById('importFile').click();
+	};
+
+	document.getElementById('importFile').addEventListener('change', function(event) {
+		const file = event.target.files[0];
+		if (file) {
+			const formData = new FormData();
+			formData.append('file', file);
+
+			fetch('/storage/import', {
+				method: 'POST',
+				body: formData
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok ' + response.statusText);
+					}
+					// Check if the response has content
+					if (response.status === 204 || response.headers.get('content-length') === '0') {
+						return null;
+					}
+					return response.json();
+				})
+				.then(data => {
+					alert('Import successful');
+					loadStorages();
+				})
+				.catch(error => {
+					console.error('Error importing data:', error);
+					alert('Import failed');
+				});
+		}
+	});
 });

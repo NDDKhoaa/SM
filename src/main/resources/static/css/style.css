@@ -29,7 +29,7 @@ body {
 	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-/* Heading */
+/* Headings */
 h1, h2 {
 	text-align: center;
 	color: #2c3e50;
@@ -162,6 +162,7 @@ button.delete-btn:hover {
 		font-size: 1.5em;
 	}
 }
+
 /* Error Page Styles */
 .error-page {
 	display: flex;
@@ -197,4 +198,83 @@ button.delete-btn:hover {
 
 .error-page a:hover {
 	background-color: #a71d2a;
+}
+
+.action-buttons {
+	display: flex;
+	gap: 5px;
+}
+
+.edit-btn, .delete-btn {
+	padding: 5px 10px;
+	font-size: 0.9em;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.edit-btn {
+	background-color: #3498db;
+	color: #fff;
+	border: none;
+}
+
+.delete-btn {
+	background-color: #e74c3c;
+	color: #fff;
+	border: none;
+}
+
+.delete-btn:hover {
+	background-color: #c0392b;
+}
+/* Storage Filter Section*/
+.filter-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+	width: 30%;
+}
+
+.small-filter {
+	padding: 10px;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+}
+
+.small-filter label {
+	display: block;
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
+.small-filter input {
+	width: 100%;
+	padding: 5px;
+	margin-bottom: 10px;
+	font-size: 14px;
+}
+
+.small-filter button {
+	padding: 5px 10px;
+	font-size: 14px;
+}
+
+/* Pagination Section */
+.pagination-controls {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 5%;
+	margin-top: 20px;
+	margin-bottom: -20px;
+}
+.page-select {
+	margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
 }

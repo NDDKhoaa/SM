@@ -1,49 +1,69 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Storage</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/fragments.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Storage</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/fragments.css">
+<link rel="stylesheet"
+	href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body>
-    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+	<div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <div class="main">
-        <div th:replace="~{fragments/header :: header}"></div>
+	<div class="main">
+		<div th:replace="~{fragments/header :: header}"></div>
 
-        <div class="content">
-            <h1>Add or Edit Storage</h1>
-            <form id="storageForm">
-                <input type="hidden" id="storageId" /> <!-- Hidden storageId field for editing -->
-                <select id="productId" required>
-                    <option value="" disabled selected>Select Product</option>
-                </select>
-                <input type="number" id="quantity" placeholder="Quantity" required />
-                <input type="text" id="status" placeholder="Status" required />
-                <button type="button" onclick="saveStorage()">Submit</button>
-            </form>
+		<div class="content">
+			<h2>Storages List</h2>
+			<button class="edit-btn" onclick="createStorage()">Add</button>
+			<button class="edit-btn" onclick="importData()">Import</button>
+			<input type="file" id="importFile" style="display: none;"
+				accept=".csv" />
+			<button class="edit-btn" onclick="exportData()">Export</button>
+			<button class="edit-btn" onclick="toggleFilter()">Filter</button>
+			<div class="filter-section small-filter" style="display: none;">
+				<label for="filterCreatedDate">Filter by Created Date:</label> <input
+					type="text" id="filterCreatedDate" placeholder="Select Date" /> <label
+					for="filterProductName">Filter by Product Name:</label> <input
+					type="text" id="filterProductName" placeholder="Enter Product Name" />
+				<label for="filterMeasurement">Filter by Measurement:</label> <input
+					type="text" id="filterMeasurement" placeholder="Enter Measurement" />
+				<button onclick="applyFilters()">Apply Filters</button>
+			</div>
+			<div class="pagination-controls">
+				<select id="pageSize" onchange="updatePageSize()">
+					<option value="5">5</option>
+					<option value="10" selected>10</option>
+					<option value="20">20</option>
+					<option value="50">50</option>
+					<option value="100">100</option>
+					<option value="10000000">All</option>
+				</select>
+			</div>
+			<table id="storageTable">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Product</th>
+						<th>Quantity</th>
+						<th>Measurement</th>
+						<th>Created Date</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Storage will be dynamically added here -->
+				</tbody>
+			</table>
+			<div class="page-select" id="paginationControls"></div>
+		</div>
+	</div>
 
-            <h2>Storages List</h2>
-            <table id="storageTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Storage will be dynamically added here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <script src="/js/storage.js"></script>
-    <script src="/js/fragments.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="/js/storage.js"></script>
 </body>
 </html>
