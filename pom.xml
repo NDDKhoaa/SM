@@ -11,7 +11,7 @@
  </parent>
  <groupId>dktech</groupId>
  <artifactId>SM</artifactId>
- <version>0.0.1-SNAPSHOT</version>
+ <version>0.1</version>
  <name>SM</name>
  <description>Storage Management project for Spring Boot of DK Technology</description>
  <url />
